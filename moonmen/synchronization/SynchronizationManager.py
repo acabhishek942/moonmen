@@ -86,6 +86,14 @@ class SynchronizationManager():
 			if deletedFile not in (self.mySystemModififications['files_deleted'] + self.mySystemModififications['files_modified'] + self.mySystemModififications['files_created'] + self.mySystemMovedSource + self.mySystemMovedDestination):
 				mySystemFileProcesses.append(('delete', deletedFile))
 
+		for deletedDirectory in self.mySystemModififications['dirs_deleted']:
+			if deletedDirectory not in (self.otherSystemModifications['dirs_deleted'] + self.otherSystemModifications['dirs_modified'] + self.otherSystemModifications['dirs_created'] + self.otherSystemMovedSource + self.otherSystemMovedDestination):
+				otherSystemFileProcesses.append(('deletedDirectory', deletedDirectory))
+
+		for deletedDirectory in self.otherSystemModifications['dirs_deleted']:
+			if deletedDirectory not in (self.mySystemModififications['dirs_deleted'] + self.mySystemModififications['dirs_modified'] + self.mySystemModififications['dirs_created'] + self.mySystemMovedSource + self.mySystemMovedDestination):
+				mySystemFileProcesses.append(('deletedDirectory', deletedDirectory))
+
 		return (mySystemFileProcesses, otherSystemFileProcesses)
 
 
@@ -104,6 +112,14 @@ class SynchronizationManager():
 		for createdFile in self.otherSystemModifications['files_created']:
 			if createdFile not in self.mySystemModififications['files_created']:
 				mySystemFileProcesses.append(('create', createdFile))
+
+		for createdDirectory in self.mySystemModififications['dirs_created']:
+			if createdDirectory not in self.otherSystemModifications['dirs_created']:
+				otherSystemFileProcesses.append(('createDirectory', createdDirectory))
+
+		for createdDirectory in self.otherSystemModifications['dirs_created']:
+			if createdDirectory not in self.mySystemModififications['dirs_created']:
+				mySystemFileProcesses.append(('createDirectory', createdDirectory))
 
 
 
@@ -234,6 +250,10 @@ class SynchronizationManager():
 				filesystemManager.writeFile(systemFileProcess[1], contents[systemFileProcess[1]])
 			elif systemFileProcess[0] == 'delete':
 				filesystemManager.deleteFile(systemFileProcess[1])
+			elif systemFileProcess[0] == 'deletedDirectory':
+				filesystemManager.deleteDirectory(systemFileProcess[1])
+			elif systemFileProcess[0] == 'createDirectory':
+				filesystemManager.createDirectory(systemFileProcess[1])
 			else:
 				filesystemManager.moveFile(systemFileProcess[1][0], systemFileProcess[1][1])
 

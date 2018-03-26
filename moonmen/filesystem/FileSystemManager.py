@@ -55,6 +55,7 @@ class FileSystemManager():
         param difference: L{watchdog.utils.dirsnapshot.DirectorySnapshotDiff}
         """
         diffDict = {}
+        print(difference.__dict__.items())
         for key, value in difference.__dict__.items():
             if key in  ('_dirs_moved', '_files_moved'):
                 diffDict[key[1:]] = list(starmap(
@@ -62,6 +63,7 @@ class FileSystemManager():
                     relpath(p2, self.directoryPath)), value))
             else:
                 diffDict[key[1:]] = list(map(lambda p: relpath(p, self.directoryPath), value))
+        print (diffDict)
         return diffDict
 
     def syncBackupState(self):
@@ -83,7 +85,7 @@ class FileSystemManager():
 
         param path : path of the directory to create
         """
-        os.makedirs(relpath(path, self.directoryPath), exist_ok=True)
+        os.makedirs(relpath(self.directoryPath+'/'+path), exist_ok=True)
 
     def deleteDirectory(self, path):
         """

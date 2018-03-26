@@ -37,6 +37,35 @@ class SynchronizerTestCases(TestCase):
 		self.assertCountEqual(mySystemFileProcesses, expectedMySystemFileProcesses)
 		self.assertCountEqual(otherSystemFileProcesses, expectedOtherSystemFileProcesses)
 
+
+	def test_directoryDeletedOnMyDevice(self):
+		mySystemModifications = {
+			"dirs_created": [],
+			"dirs_deleted": ['deleted_directory'],
+			"dirs_modified": [],
+			"dirs_moved": [],
+			"files_created": [],
+			"files_deleted": [],
+			"files_modified": [],
+			"files_moved": [],
+		}
+		otherSystemModifications = {
+			"dirs_created": [],
+			"dirs_deleted": [],
+			"dirs_modified": [],
+			"dirs_moved": [],
+			"files_created": [],
+			"files_deleted": [],
+			"files_modified": [],
+			"files_moved": [],
+		}
+		synchronizer = SynchronizationManager(mySystemModifications, otherSystemModifications)
+		mySystemFileProcesses, otherSystemFileProcesses = synchronizer.getFileProcesses()
+		expectedMySystemFileProcesses = []
+		expectedOtherSystemFileProcesses = [('deletedDirectory', 'deleted_directory')]
+		self.assertCountEqual(mySystemFileProcesses, expectedMySystemFileProcesses)
+		self.assertCountEqual(otherSystemFileProcesses, expectedOtherSystemFileProcesses)
+
 	def test_fileDeletedOnOtherDevice(self):
 		mySystemModifications = {
 			"dirs_created": [],
@@ -61,6 +90,35 @@ class SynchronizerTestCases(TestCase):
 		synchronizer = SynchronizationManager(mySystemModifications, otherSystemModifications)
 		mySystemFileProcesses, otherSystemFileProcesses = synchronizer.getFileProcesses()
 		expectedMySystemFileProcesses = [('delete', 'deleted_file')]
+		expectedOtherSystemFileProcesses = []
+		self.assertCountEqual(otherSystemFileProcesses, expectedOtherSystemFileProcesses)
+		self.assertCountEqual(mySystemFileProcesses, expectedMySystemFileProcesses)
+
+
+	def test_directoryDeletedOnOtherDevice(self):
+		mySystemModifications = {
+			"dirs_created": [],
+			"dirs_deleted": [],
+			"dirs_modified": [],
+			"dirs_moved": [],
+			"files_created": [],
+			"files_deleted": [],
+			"files_modified": [],
+			"files_moved": [],
+		}
+		otherSystemModifications = {
+			"dirs_created": [],
+			"dirs_deleted": ['deleted_directory'],
+			"dirs_modified": [],
+			"dirs_moved": [],
+			"files_created": [],
+			"files_deleted": [],
+			"files_modified": [],
+			"files_moved": [],
+		}
+		synchronizer = SynchronizationManager(mySystemModifications, otherSystemModifications)
+		mySystemFileProcesses, otherSystemFileProcesses = synchronizer.getFileProcesses()
+		expectedMySystemFileProcesses = [('deletedDirectory', 'deleted_directory')]
 		expectedOtherSystemFileProcesses = []
 		self.assertCountEqual(otherSystemFileProcesses, expectedOtherSystemFileProcesses)
 		self.assertCountEqual(mySystemFileProcesses, expectedMySystemFileProcesses)
@@ -118,6 +176,35 @@ class SynchronizerTestCases(TestCase):
 		mySystemFileProcesses, otherSystemFileProcesses = synchronizer.getFileProcesses()
 		expectedMySystemFileProcesses = []
 		expectedOtherSystemFileProcesses = [('create', 'created_file')]
+		self.assertCountEqual(mySystemFileProcesses, expectedMySystemFileProcesses,)
+		self.assertCountEqual(otherSystemFileProcesses, expectedOtherSystemFileProcesses)
+
+	def test_directoryCreatedOnMyDevice(self):
+
+		mySystemModifications = {
+			"dirs_created": ['created_directory'],
+			"dirs_deleted": [],
+			"dirs_modified": [],
+			"dirs_moved": [],
+			"files_created": [],
+			"files_deleted": [],
+			"files_modified": [],
+			"files_moved": [],
+		}
+		otherSystemModifications = {
+			"dirs_created": [],
+			"dirs_deleted": [],
+			"dirs_modified": [],
+			"dirs_moved": [],
+			"files_created": [],
+			"files_deleted": [],
+			"files_modified": [],
+			"files_moved": [],
+		}
+		synchronizer = SynchronizationManager(mySystemModifications, otherSystemModifications)
+		mySystemFileProcesses, otherSystemFileProcesses = synchronizer.getFileProcesses()
+		expectedMySystemFileProcesses = []
+		expectedOtherSystemFileProcesses = [('createDirectory', 'created_directory')]
 		self.assertCountEqual(mySystemFileProcesses, expectedMySystemFileProcesses,)
 		self.assertCountEqual(otherSystemFileProcesses, expectedOtherSystemFileProcesses)
 
